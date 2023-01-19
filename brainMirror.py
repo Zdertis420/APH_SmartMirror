@@ -3,10 +3,12 @@ import bs4
 
 try:
     responseWeather=requests.get('https://yandex.ru/pogoda/')
+    
     pageTemper=bs4.BeautifulSoup(responseWeather.content)
     pageWindSpeed = bs4.BeautifulSoup(responseWeather.content)
 
     responseTime=requests.get('https://time100.ru')
+    
     pageTime=bs4.BeautifulSoup(responseTime.content)
 
     temper=pageTemper.find('span', 'temp__value temp__value_with-unit')
@@ -19,4 +21,3 @@ try:
     windspeed=windspeed.text
 except ConnectionError:
     print('Проверьте ваше подключение к интернету')
-print(windspeed)
