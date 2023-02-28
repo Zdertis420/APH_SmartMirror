@@ -1,23 +1,18 @@
 import requests
-import bs4
+from datetime import datetime
+
+s_city = "Moscow,RU"
+city_id = 524901
+appid = "36864f4aec2acf7d8abf1d0afa33df75"
 
 try:
-    responseWeather=requests.get('https://yandex.ru/pogoda/')
-    
-    pageTemper=bs4.BeautifulSoup(responseWeather.content)
-    pageWindSpeed = bs4.BeautifulSoup(responseWeather.content)
+    res = requests.get("http://api.openweathermap.org/data/2.5/weather",
+                 params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
+    data = res.json()
+    conditions = ("conditions:", data['weather'][0]['description'])
+    temp = ("temp:", data['main']['temp'])
+except Exception as e:
+    print("Exception (weather):", e)
+    pass
 
-    responseTime=requests.get('https://time100.ru')
-    
-    pageTime=bs4.BeautifulSoup(responseTime.content)
-
-    temper=pageTemper.find('span', 'temp__value temp__value_with-unit')
-    time=pageTime.find('span', 'time')
-    windspeed=pageWindSpeed.find('span', 'wind-speed')
-
-
-    temper=temper.text
-    time=time.text
-    windspeed=windspeed.text
-except ConnectionError:
-    print('Проверьте ваше подключение к интернету')
+time = datetime.now().strftime('%H:%M')
